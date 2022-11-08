@@ -15,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController viernes = TextEditingController();
   late double horassemanales = 0;
   late String textoHorasSemanales = "0";
+  late bool paganMinutos = false;
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +74,25 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(Icons.watch_later_outlined),
                     labelText: "¿Cuántas horas trabajas los Viernes?"),
               ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
+              CheckboxListTile(
+                title: const Text("Me Descuentan los 20 Minutos"),
+                value: paganMinutos,
+                secondary: Icon(Icons.thumb_down),
+                onChanged: (newValue) {
+                  setState(() {
+                    paganMinutos = true;
+                  });
+                },
+                controlAffinity:
+                    ListTileControlAffinity.leading, //  <-- leading Checkbox
+              ),
+              const Padding(
+                padding: EdgeInsets.all(20.0),
                 child: Text("Total de horas semanales: "),
               ),
               Text(
                 textoHorasSemanales,
-                style: TextStyle(fontSize: 25),
+                style: const TextStyle(fontSize: 25),
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -94,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                       textoHorasSemanales = horassemanales.toString();
                     });
                   },
-                  child: Text("CALCULAR"),
+                  child: const Text("CALCULAR"),
                 ),
               ),
             ],
