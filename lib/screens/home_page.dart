@@ -1,3 +1,4 @@
+import 'package:diasexceso/screens/percentage_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,16 +14,29 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController miercoles = TextEditingController();
   final TextEditingController jueves = TextEditingController();
   final TextEditingController viernes = TextEditingController();
-  late double horassemanales = 0;
-  late String textoHorasSemanales = "0";
+  late double horasanuales = 0;
+  late String textoHorasAnuales = "0";
   late bool paganMinutos = false;
+  late bool calculado = false;
+  late String textoLadrones = "";
+  late double numeroDeLunes = 44;
+  late double numeroDeMartes = 45;
+  late double numeroDeMiercoles = 46;
+  late double numeroDeJueves = 45;
+  late double numeroDeViernes = 47;
+  //227
+  late double numeroDeDiasAno = numeroDeLunes +
+      numeroDeMartes +
+      numeroDeMiercoles +
+      numeroDeJueves +
+      numeroDeViernes;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Center(child: Text("Días de exceso: Horas Semanales")),
+        title: const Center(child: Text("Exceso 2022: Horas Trabajadas")),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -32,66 +46,80 @@ class _HomePageState extends State<HomePage> {
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
-                  "Rellena el siguiente formulario para poder cálcular tus días de exceso:",
-                  style: TextStyle(fontSize: 20),
+                  "Por favor, introduce las HORAS en formato DECIMAL Ej. 2 horas y 15 minutos = 2.25 horas. Incluye los 20 minutos de descanso en las horas de trabajo diarias. De otra forma, los calculos no seran correctos. Muchas Gracias.",
+                  textAlign: TextAlign.justify,
                 ),
-              ),
-              const Text(
-                "(Por favor, introduce los datos en formato decimal Ej. 2 horas 15 minutos = 2.25 horas.)",
               ),
               TextField(
                 controller: lunes,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                    icon: Icon(Icons.watch_later_outlined),
-                    labelText: "¿Cuántas horas trabajas los Lunes?"),
+                  icon: Icon(Icons.watch_later_outlined),
+                  labelText: "¿Cuántas horas trabajas los Lunes?",
+                  hintText: "0.0",
+                ),
               ),
               TextField(
                 controller: martes,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                    icon: Icon(Icons.watch_later_outlined),
-                    labelText: "¿Cuántas horas trabajas los Martes?"),
+                  icon: Icon(Icons.watch_later_outlined),
+                  labelText: "¿Cuántas horas trabajas los Martes?",
+                  hintText: "0.0",
+                ),
               ),
               TextField(
                 controller: miercoles,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                    icon: Icon(Icons.watch_later_outlined),
-                    labelText: "¿Cuántas horas trabajas los Miércoles?"),
+                  icon: Icon(Icons.watch_later_outlined),
+                  labelText: "¿Cuántas horas trabajas los Miércoles?",
+                  hintText: "0.0",
+                ),
               ),
               TextField(
                 controller: jueves,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                    icon: Icon(Icons.watch_later_outlined),
-                    labelText: "¿Cuántas horas trabajas los Jueves?"),
+                  icon: Icon(Icons.watch_later_outlined),
+                  labelText: "¿Cuántas horas trabajas los Jueves?",
+                  hintText: "0.0",
+                ),
               ),
               TextField(
                 controller: viernes,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                    icon: Icon(Icons.watch_later_outlined),
-                    labelText: "¿Cuántas horas trabajas los Viernes?"),
+                  icon: Icon(Icons.watch_later_outlined),
+                  labelText: "¿Cuántas horas trabajas los Viernes?",
+                  hintText: "0.0",
+                ),
               ),
-              CheckboxListTile(
-                title: const Text("Me Descuentan los 20 Minutos"),
-                value: paganMinutos,
-                secondary: Icon(Icons.thumb_down),
-                onChanged: (newValue) {
-                  setState(() {
-                    paganMinutos = true;
-                  });
-                },
-                controlAffinity:
-                    ListTileControlAffinity.leading, //  <-- leading Checkbox
-              ),
+              // CheckboxListTile(
+              //   title: const Text("Me Descuentan los 20 Minutos del sueldo"),
+
+              //   subtitle: Text(textoLadrones),
+              //   value: paganMinutos,
+              //   secondary: Icon(Icons.money_off),
+              //   onChanged: (newValue) {
+              //     setState(() {
+              //       paganMinutos = newValue!;
+              //       if (paganMinutos == true) {
+              //         textoLadrones = "¡Ladrones💰🥷🏽!";
+              //       } else {
+              //         textoLadrones = "";
+              //       }
+              //     });
+              //   },
+              //   controlAffinity:
+              //       ListTileControlAffinity.trailing, //  <-- leading Checkbox
+              // ),
               const Padding(
                 padding: EdgeInsets.all(20.0),
-                child: Text("Total de horas semanales: "),
+                child: Text("Horas que trabajarás este año: "),
               ),
               Text(
-                textoHorasSemanales,
+                textoHorasAnuales,
                 style: const TextStyle(fontSize: 25),
               ),
               Padding(
@@ -99,17 +127,34 @@ class _HomePageState extends State<HomePage> {
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      horassemanales = double.parse(lunes.text) +
-                          double.parse(martes.text) +
-                          double.parse(miercoles.text) +
-                          double.parse(jueves.text) +
-                          double.parse(viernes.text);
-                      textoHorasSemanales = horassemanales.toString();
+                      horasanuales = (double.parse(lunes.text) *
+                              numeroDeLunes) +
+                          (double.parse(martes.text) * numeroDeMartes) +
+                          (double.parse(miercoles.text) * numeroDeMiercoles) +
+                          (double.parse(jueves.text) * numeroDeJueves) +
+                          (double.parse(viernes.text) * numeroDeViernes);
+                      textoHorasAnuales = horasanuales.toStringAsFixed(2);
+                      if (horasanuales > 0) {
+                        calculado = true;
+                      }
                     });
                   },
                   child: const Text("CALCULAR"),
                 ),
               ),
+              if (calculado)
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PercentajePage(horasanuales)),
+                      );
+                    },
+                    child: const Text(
+                      "SIGUIENTE",
+                      style: TextStyle(fontSize: 20),
+                    ))
             ],
           ),
         ),
